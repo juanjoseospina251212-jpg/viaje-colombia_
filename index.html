@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Viaje a Colombia</title>
+<style>
+:root {
+  --card-bg: rgba(0,0,0,0.4);
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, "San Francisco", Arial, sans-serif;
+  background: linear-gradient(180deg, #fcd116 0%, #003893 55%, #ce1126 100%);
+  color: white;
+}
+.app {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: env(safe-area-inset-top) 20px env(safe-area-inset-bottom);
+  text-align: center;
+}
+.header {
+  margin-top: 20px;
+}
+.header h1 {
+  font-size: 2rem;
+  margin: 0;
+}
+.flag {
+  font-size: 1.8rem;
+  margin-top: 6px;
+}
+.card {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 380px;
+  background: var(--card-bg);
+  border-radius: 26px;
+  padding: 28px 20px 30px;
+  backdrop-filter: blur(14px);
+}
+.days {
+  font-size: 4.8rem;
+  font-weight: 800;
+  line-height: 1;
+}
+.time {
+  font-size: 1.5rem;
+  margin-top: 8px;
+  letter-spacing: 1px;
+}
+.label {
+  margin-top: 14px;
+  font-size: 1.1rem;
+}
+.date {
+  margin-top: 4px;
+  font-size: 0.95rem;
+  opacity: 0.85;
+}
+.footer {
+  font-size: 0.9rem;
+  opacity: 0.75;
+  margin-bottom: 10px;
+}
+.pulse {
+  animation: pulse 1.4s ease-in-out infinite;
+}
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <h1>✈️ Viaje a Colombia</h1>
+    <div class="flag">🇨🇴</div>
+  </div>
+
+  <div class="card" id="card">
+    <div class="days" id="days">--</div>
+    <div class="time" id="time">--:--:--</div>
+    <div class="label">para despegar</div>
+    <div class="date">28 de enero</div>
+  </div>
+
+  <div class="footer" id="footer">Cuenta regresiva activa</div>
+</div>
+
+<script>
+function update() {
+  const now = new Date();
+  const target = new Date(2026, 0, 28, 0, 0, 0);
+  const diff = target - now;
+
+  if (diff <= 0) {
+    document.getElementById("days").textContent = "0";
+    document.getElementById("time").textContent = "00:00:00";
+    document.getElementById("footer").textContent = "✈️ Hoy es el día";
+    if (navigator.vibrate) navigator.vibrate([200,100,200]);
+    return;
+  }
+
+  const days = Math.floor(diff / (1000*60*60*24));
+  const hours = Math.floor((diff / (1000*60*60)) % 24);
+  const minutes = Math.floor((diff / (1000*60)) % 60);
+  const seconds = Math.floor((diff / 1000) % 60);
+
+  document.getElementById("days").textContent = days;
+  document.getElementById("time").textContent =
+    String(hours).padStart(2,"0") + ":" +
+    String(minutes).padStart(2,"0") + ":" +
+    String(seconds).padStart(2,"0");
+
+  const card = document.getElementById("card");
+  if (days <= 7) card.classList.add("pulse");
+}
+
+update();
+setInterval(update, 1000);
+</script>
+</body>
+</html>
